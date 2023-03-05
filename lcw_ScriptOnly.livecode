@@ -1,0 +1,67 @@
+﻿script "lcw_ScriptOnly"
+--> MetaData
+-
+license: GPLv3
+name: lcw_ScriptOnly
+type: project
+version: 0.1
+
+
+--> Working on
+-
+command test_Button
+   put the stack_PropertyJSON of me into pJSON
+   set the text of field 1 to pJSON
+   -- 
+   if there is not a stack "Test" then
+      create stack "Test"
+      set the destroystack of stack "Test" to true
+      set the destroywindow of stack "Test" to true
+   end if
+   --
+   set the stack_PropertyJSON of stack "Test" to pJSON
+   --
+   put the scriptonly of stack "Test"
+   --
+   set the filename of player 1 of stack "Test" to "https://player.vimeo.com/external/402012353.sd.mp4?s=4b5f3445241d65f75617a1892009a975ba8a80dd&profile_id=165"
+end test_Button
+
+command test_StoreToWiki
+   
+end test_StoreToWiki
+
+function test_FetchFromWiki
+   
+end test_FetchFromWiki
+
+
+--> Events
+-
+getprop project_Deps
+   return "lcw,lcw_Tools,lcw_Authoring,lcw_GIT,lcw_Revigniter,lcw_Script,lcw_Google,lcw_Media,lcw_Chat,lcw_Graph"
+end project_Deps
+
+
+--> Events
+-
+on preOpenStack 
+   if the short name of the defaultstack is not the short name of me then
+      pass preOpenStack
+   else
+      lcw_Init
+      env_RecursivelyLoadProjects
+   end if
+end preOpenStack
+
+
+--> Deps
+-
+command lcw_Init
+   -- make sure LCW is loaded so we can open from finder
+   set the itemdelimiter to slash
+   put the effective filename of the defaultstack into lcwHomePath
+   put "lcw/lcw.livecode" into item -2 to -1 of lcwHomePath
+   if there is a stack lcwHomePath then
+      dispatch "lcw_Init" to stack lcwHomePath
+   end if
+end lcw_Init
